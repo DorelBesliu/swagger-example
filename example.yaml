@@ -1,0 +1,160 @@
+openapi: 3.0.0
+info:
+  title: App API
+  version: 1.0.0
+servers:
+  - url: 'http://app-api.local/api'
+    description: Development Server
+paths:
+  /student/events:
+    post:
+      tags:
+        - Student
+      summary: Create event
+      operationId: 'App\Http\Controllers\Student\EventsController::store'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                teacher_id:
+                  description: Teacher id
+                  type: integer
+                start:
+                  description: Start event time
+                  type: string
+                  format: date
+                lesson_duration:
+                  description: Lesson duration in minutes
+                  type: integer
+                  format: date
+                lessons_amount:
+                  description: Amount of lessons
+                  type: integer
+                  format: date
+                type:
+                  description: Store a newly created resource in storage.
+                  type: string
+                  enum:
+                    - EVENT_TYPE_OFFTIME
+              type: object
+      responses:
+        '200':
+          description: Event created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResource'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Sever error
+      security:
+        - auth:
+            - '*'
+  '/student/events/{event}':
+    put:
+      tags:
+        - Student
+      summary: Get event information
+      operationId: 'App\Http\Controllers\Student\EventsController::update'
+      parameters:
+        - name: event
+          in: path
+          description: Event id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                teacher_id:
+                  description: Teacher id
+                  type: integer
+                start:
+                  description: Start event time
+                  type: string
+                  format: date
+                lesson_duration:
+                  description: Lesson duration in minutes
+                  type: integer
+                  format: date
+                lessons_amount:
+                  description: Amount of lessons
+                  type: integer
+                  format: date
+                type:
+                  description: Update the specified resource in storage.
+                  type: string
+                  enum:
+                    - EVENT_TYPE_OFFTIME
+              type: object
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResource'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Sever error
+      security:
+        - auth:
+            - '*'
+components:
+  schemas:
+    EventResource:
+      title: Event
+      properties:
+        id:
+          description: Event id
+          type: integer
+          format: int64
+        teacherId:
+          description: Teacher id
+          type: integer
+          format: int64
+        studentId:
+          description: Student id
+          type: integer
+          format: int64
+        eventTipropertytle:
+          description: Event title
+          type: string
+        eventText:
+          description: Event notices
+          type: string
+        start:
+          description: Event start
+          type: string
+          format: date
+        lessonDuration:
+          description: Lesson duration
+          type: integer
+          format: int32
+        lessonsAmount:
+          description: Lesson amount
+          type: integer
+          format: int32
+        eventType:
+          description: Event type
+          type: string
+      type: object
+      xml:
+        name: Event
+  securitySchemes:
+    auth:
+      type: oauth2
+      flows:
+        password:
+          tokenUrl: 'http://student-app-api.local/api/login'
+          scopes: {}
+tags:
+  - name: Student
+    description: ''
